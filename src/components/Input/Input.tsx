@@ -1,17 +1,16 @@
 import { FC, useEffect, useState } from "react"
 import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
-import axios from 'axios'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useQueryClient } from "react-query";
 import { useMutation } from "react-query";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { postTodo } from "../../api/postTodo";
 
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { TextField, Typography } from "@mui/material";
-
 
 interface IFormInput {
     desc: string
@@ -26,12 +25,6 @@ const Input: FC = () =>{
     const [description, setDescription] = useState<string>(' ')
     const { enqueueSnackbar} = useSnackbar();
 
-    const postTodo = (newTodo: any) => {
-        enqueueSnackbar('Todo added');
-        setDescription('')
-        return axios.post('https://6371ffa2078587786187b961.mockapi.io/todos', newTodo)
-    }
-
     const { register, formState: { errors }, handleSubmit, } = useForm<IFormInput>({
         resolver: zodResolver(schema)
     });
@@ -43,7 +36,14 @@ const Input: FC = () =>{
     const { mutate } = useMutation(postTodo, {
         onSuccess: () => {
             queryClient.invalidateQueries('todos')
-    }})
+            enqueueSnackbar('Todo added');
+            setDescription('')
+        },
+        onError: (error: unknown | any) => {
+            console.log(error.message)
+            enqueueSnackbar('Не удалось создать заметку')
+        }
+    })
 
     return  <Box sx={{ display: 'flex', mb: 5 }}>
         <form onSubmit={handleSubmit(onSubmit)}>

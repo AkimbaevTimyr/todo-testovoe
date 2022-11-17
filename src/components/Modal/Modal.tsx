@@ -4,8 +4,8 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { convertTimestampToDate } from "../../hooks/convertTimestampToDate";
 import { useMutation, useQueryClient } from "react-query";
-import axios from "axios";
 import { useSnackbar } from "notistack";
+import { updateTodo } from "../../api/updateTodo";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -31,11 +31,6 @@ const ModalWindow: FC<ModalWindowProps> = ({open, handleClose, id, createdAt, de
     const [desc, setDesc] = useState<string>(description)
     const { enqueueSnackbar } = useSnackbar();
     const queryClient = useQueryClient()
-    
-    const updateTodo = async(id: string) =>{
-        const data  = await axios.put(`https://6371ffa2078587786187b961.mockapi.io/todos/${id}`, {description: desc})
-        return data
-    }
 
     const mutation = useMutation(updateTodo, {
         onSuccess: (data: {}) =>{
@@ -51,7 +46,7 @@ const ModalWindow: FC<ModalWindowProps> = ({open, handleClose, id, createdAt, de
 
     const handleClick = () =>{
         handleClose()
-        mutation.mutate(id)
+        mutation.mutate({id, desc})
     }
 
     return(
