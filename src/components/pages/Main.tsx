@@ -25,7 +25,7 @@ const Main: FC = () => {
             >
             <Box sx={{ boxShadow: 1, p:2, marginTop: "100px"}}>
                 <Input />
-                {data.map((el: TodoType) =>  <Todo key={el.id} id={el.id} createdAt={el.createdAt} description={el.description} />  )}
+                {data.map((el: TodoType) =>  <Todo key={el.id} id={el.id} createdAt={el.createdAt} description={el.description} title={el.title} />  )}
             </Box>
         </Grid>
     )

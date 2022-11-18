@@ -9,10 +9,11 @@ import { useMutation, useQueryClient } from "react-query";
 interface TodoProps {
     id: string;
     createdAt: Date;
+    title: string;
     description: string;
 }
 
-const Todo: FC<TodoProps> = ({id, createdAt, description}) => {
+const Todo: FC<TodoProps> = ({id, createdAt, description, title}) => {
     const queryClient = useQueryClient()
     const { enqueueSnackbar } = useSnackbar();
     const [open, setOpen] = useState(false);
@@ -36,7 +37,7 @@ const Todo: FC<TodoProps> = ({id, createdAt, description}) => {
 
     return(
         <Box  sx={{display: "flex", justifyContent: "space-between", height: 50, borderBottom: 1,  alignItems: "center"}}>
-            <Typography onClick={handleOpen} sx={{cursor: "pointer"}}>{description}</Typography>
+            <Typography onClick={handleOpen} sx={{cursor: "pointer"}}>{title}</Typography>
             <Button onClick={()=> mutation.mutate(id)}>
                 <DeleteIcon  />
             </Button>
